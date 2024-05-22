@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Oylama Sonuçları{% endblock %}
+{% block content %}
+<h3 align="center">Oylama Sonuçları: {{ poll.question }}</h3>
+<ul>
+  {% for option, count in results.items() %}
+    <li>{{ option }}: {{ count }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

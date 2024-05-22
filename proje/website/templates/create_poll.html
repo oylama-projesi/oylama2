@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Oylama Oluştur{% endblock %}
+{% block content %}
+<h3 align="center">Oylama Oluştur{% if group %} {{ group.name }} {% endif %}</h3>
+<form method="POST" action="{{ url_for('views.create_poll') }}">
+  {{ form.hidden_tag() }}
+  <div class="form-group">
+      {{ form.question.label(class="form-label") }}
+      {{ form.question(class="form-control") }}
+  </div>
+  <div class="form-group">
+      {{ form.group_id.label(class="form-label") }}
+      {{ form.group_id(class="form-control") }}
+  </div>
+  <div class="form-group">
+      <label for="poll_options" class="form-label">Seçenekler</label>
+      <div id="poll_options">
+          <div class="option-group">
+              <input type="text" name="poll_options" class="form-control" placeholder="Seçenek 1">
+              <button type="button" class="btn btn-danger remove-option" onclick="removeOption(this)">Seçenek Sil</button>
+          </div>
+      </div>
+      <button type="button" class="btn btn-primary" onclick="addOption()">Seçenek Ekle</button>
+  </div>
+  <div class="form-group">
+      {{ form.end_time.label(class="form-label") }}
+      {{ form.end_time(class="form-control") }}
+  </div>
+  <br>
+  <button type="submit" class="btn btn-primary">Oylama Oluştur</button>
+</form>
+
+<script>
+  function addOption() {
+      const optionGroup = document.createElement('div');
+      optionGroup.className = 'option-group';
+      
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.name = 'poll_options';
+      input.className = 'form-control';
+      input.placeholder = `Seçenek ${document.querySelectorAll('#poll_options .option-group').length + 1}`;
+      
+      const removeButton = document.createElement('button');
+      removeButton.type = 'button';
+      removeButton.className = 'btn btn-danger remove-option';
+      removeButton.textContent = 'Seçenek Sil';
+      removeButton.onclick = function() {
+          removeOption(removeButton);
+      };
+      
+      optionGroup.appendChild(input);
+      optionGroup.appendChild(removeButton);
+      
+      document.getElementById('poll_options').appendChild(optionGroup);
+  }
+  
+  function removeOption(button) {
+      const optionGroup = button.parentElement;
+      document.getElementById('poll_options').removeChild(optionGroup);
+      
+      // Seçenek numaralarını güncelle
+      const options = document.querySelectorAll('#poll_options .option-group input');
+      options.forEach((option, index) => {
+          option.placeholder = `Seçenek ${index + 1}`;
+      });
+  }
+</script>
+{% endblock %}
